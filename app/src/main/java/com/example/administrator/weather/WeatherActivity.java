@@ -1,5 +1,6 @@
 package com.example.administrator.weather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.administrator.weather.Service.AutoUpdateService;
 import com.example.administrator.weather.gson.Forecast;
 import com.example.administrator.weather.gson.Weather;
 import com.example.administrator.weather.util.HttpUtil;
@@ -120,6 +122,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     public void requestWeather(final String weatherId) {
         String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=9aabfc1b70bb4c1288b4bc1f00e13f1a";
+
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -193,6 +196,8 @@ public class WeatherActivity extends AppCompatActivity {
         carwashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+        Intent intent=new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
     /*加载必应每日一图*/

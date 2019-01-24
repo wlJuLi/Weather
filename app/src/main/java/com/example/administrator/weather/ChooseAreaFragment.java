@@ -102,7 +102,7 @@ public class ChooseAreaFragment extends Fragment {
                         intent.putExtra("weather_id",weatherId);
                         startActivity(intent);
                         getActivity().finish();
-                        
+
                         /*instanceof 关键字可以用来判断一个对象是否属于某个类的实例。
                         *我们在碎片中调用getActivity() 方法，然后配合
                         * instanceof 关键字，就能轻松判断出该碎片是在MainActivity当中，还是在WeatherActivity当中。
