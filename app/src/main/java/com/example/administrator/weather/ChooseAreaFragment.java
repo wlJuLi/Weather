@@ -1,6 +1,7 @@
 package com.example.administrator.weather;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -94,6 +95,12 @@ public class ChooseAreaFragment extends Fragment {
                     seleceCity=cityList.get(position);
                     //切换到相应的county界面
                     queryCounties();
+                } else if (currentLevel==LEVEL_COUNTY) {
+                    String weatherId=countyList.get(position).getWeatherId();
+                    Intent intent=new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -168,7 +175,7 @@ public class ChooseAreaFragment extends Fragment {
         titleText.setText(seleceCity.getCityName());
         backButtun.setVisibility(View.VISIBLE);
         countyList=DataSupport.where("cityid=?",String.valueOf(seleceCity.getId())).find(County.class);
-        if (cityList.size()>0){
+        if (countyList.size()>0){
             datalist.clear();
             for (County county:countyList){
                 datalist.add(county.getCountyName());
@@ -190,19 +197,7 @@ public class ChooseAreaFragment extends Fragment {
         //未查出之前显示出进度条框
         showProgressDialog();
         HttpUtil.sendOkHttpRequest(address, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                //通过runOnUiThread回到主线程处理逻辑
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeProgressDialog();
-                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
+           @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
                 boolean result=false;
@@ -229,6 +224,21 @@ public class ChooseAreaFragment extends Fragment {
                     });
                 }
             }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //通过runOnUiThread回到主线程处理逻辑
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closeProgressDialog();
+                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+
+
         });
 
     }
