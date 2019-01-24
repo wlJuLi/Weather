@@ -2,7 +2,9 @@ package com.example.administrator.weather;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -110,6 +112,11 @@ public class ChooseAreaFragment extends Fragment {
                         * 如果是在WeatherActivity当中，那么就关闭滑动菜单，显示下拉刷新进度条，然后请求新城市的天气信息。*/
                     } else if (getActivity() instanceof WeatherActivity) {
                         WeatherActivity activity= (WeatherActivity) getActivity();
+
+                        SharedPreferences.Editor editor= PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                        editor.putString("weather_id",weatherId);
+                        editor.apply();
+
                         activity.drawerLayout.closeDrawers();
                         activity.swipeRefresh.setRefreshing(true);
                         activity.requestWeather(weatherId);
